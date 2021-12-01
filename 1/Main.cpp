@@ -56,7 +56,7 @@ static void Exercise1(std::vector<int>& inNumbers)
     for (int i = 1; i < inNumbers.size(); i++)
         num_increases += inNumbers[i] > inNumbers[i - 1];
 
-    printf("Num increases: %d\n", num_increases);
+    gTrace("Num increases: %d\n", num_increases);
 }
 
 
@@ -108,7 +108,7 @@ static void Exercise2(std::vector<int>& inNumbers)
         num_increases += sum_b > sum_a;
     }
 
-    printf("Num increases: %d\n", num_increases);
+    gTrace("Num increases: %d\n", num_increases);
 }
 
 
@@ -124,8 +124,11 @@ int main()
         return 1;
 
     // Execute exercises
+    gAOCTimer.StartTimer("Excercise 1");
     Exercise1(numbers);
+    gAOCTimer.StartTimer("Excercise 2");
     Exercise2(numbers);
+    gAOCTimer.StopTimer();
 
     return 0;
 }
