@@ -120,7 +120,7 @@ int main()
 {
     // Collect numbers from the puzzle input
     std::vector<int> numbers;
-    if (!AOCUtility::sParseInputFile(numbers))
+    if (!AOCUtility::sParseInputFile("./1/input.txt", numbers))
         return 1;
 
     // Execute exercises

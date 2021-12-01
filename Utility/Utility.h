@@ -101,7 +101,7 @@ public:
     void StopTimer() {}
     bool IsTiming() const { return false; }
 };
-#endi
+#endif
 
 
 
@@ -134,17 +134,15 @@ class AOCUtility
 {
 public:
     /**
-    @brief Parse the puzzle input into an array of T
+    @brief Parse the file at @a inFilepath into an array of T
     **/
     template<typename T>
-    static bool sParseInputFile(std::vector<T>& outNumbers)
+    static bool sParseInputFile(const char* inFilepath, std::vector<T>& outNumbers)
     {
-        // Try to open the puzzle input file
-        const char* filename = "input.txt";
-        std::ifstream stream(filename, std::ifstream::in);
+        std::ifstream stream(inFilepath, std::ifstream::in);
         if (!stream)
         {
-            printf("File %s was not found\n", filename);
+            printf("File %s was not found\n", inFilepath);
             return false;
         }
 
