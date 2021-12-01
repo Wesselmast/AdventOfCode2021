@@ -2,6 +2,7 @@
 #include "../Utility/Utility.h"
 
 
+
 /**
 @brief Part One
 
@@ -109,6 +110,7 @@ static void Exercise2(std::vector<int>& inNumbers)
 
     printf("Num increases: %d\n", num_increases);
 }
+
 
 
 /**
