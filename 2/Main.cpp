@@ -50,8 +50,8 @@ static void Exercise1(std::vector<std::string>& inData)
     for (int i = 0; i < inData.size() - 1; i += 2)
     {
         // We will only ever need the first character of the instruction to determine what we should do
+        // Decrease the number by 48 to convert the instruction character to a number
         char    instruction = inData[i + 0][0];
-        // Decrease by 48 to convert the character to a number
         int     num         = inData[i + 1][0] - 48;
 
         switch (instruction)
@@ -109,8 +109,8 @@ static void Exercise2(std::vector<std::string>& inData)
     for (int i = 0; i < inData.size() - 1; i += 2)
     {
         // We will only ever need the first character of the instruction to determine what we should do
+        // Decrease the number by 48 to convert the instruction character to a number
         char    instruction = inData[i + 0][0];
-        // Decrease by 48 to convert the character to a number
         int     num         = inData[i + 1][0] - 48;
 
         switch (instruction)
