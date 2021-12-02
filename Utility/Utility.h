@@ -37,8 +37,9 @@ See, I'm not 'that' evil!
 
 
 /**
-@brief Utility class for calculating time taken between StartTimer and StopTimer calls
-Please the global instance 'gAOCTimer' instead of instancing this class.
+@brief Utility class for performance capturing
+
+Please refer to the global instance 'gAOCTimer' instead of instancing this class.
 **/
 class AOCTimer
 {
