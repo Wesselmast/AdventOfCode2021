@@ -24,10 +24,10 @@
 /**
 @brief Win32 only timer
 
-This was made windows-only because I dislike std::chrono
-and I am too lazy to make it actually platform-independent.
+This was made windows-only because I walk the line between disliking std::chrono enough
+and being too lazy to make it properly platform-independent.
 
-Because this code is excluded for non-windows users, the code will still compile and run.
+The timer is replaced by a dummy class for non-windows users, so the code will still compile and run.
 See, I'm not 'that' evil!
 **/
 #ifdef _WIN32
