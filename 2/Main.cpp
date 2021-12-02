@@ -44,7 +44,8 @@ static void Exercise1(std::vector<std::string>& inData)
     // Declare position variables
     int x_sum = 0;
     int z_sum = 0;
-// As we are reading out two commands at a time,
+
+    // As we are reading out two commands at a time,
     // step through @a inData in steps of two.
     for (int i = 0; i < inData.size() - 1; i += 2)
     {
