@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iterator>
 #include <vector>
+#include <string>
 
 
 
@@ -137,7 +138,7 @@ public:
     @brief Parse the file at @a inFilepath into an array of T
     **/
     template<typename T>
-    static bool sParseInputFile(const char* inFilepath, std::vector<T>& outNumbers)
+    static bool sParseInputFile(const char* inFilepath, std::vector<T>& outElements)
     {
         std::ifstream stream(inFilepath, std::ifstream::in);
         if (!stream)
@@ -149,7 +150,7 @@ public:
         // Copy elements from the file that can be implicitly casted to type T
         std::copy(std::istream_iterator<T>(stream),
                   std::istream_iterator<T>(),
-                  std::back_inserter(outNumbers));
+                  std::back_inserter(outElements));
         return true;
     }
 };
