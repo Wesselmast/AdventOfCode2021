@@ -44,6 +44,26 @@ class AOCTimer
 {
 public:
     /**
+    @brief Constructor
+    **/
+    AOCTimer()
+    {
+        // Query performance frequency
+        LARGE_INTEGER frequency;
+        if (!QueryPerformanceFrequency(&frequency))
+        {
+            printf("Timing failed, unable to query performance frequency");
+            return;
+        }
+
+        // Calculate the unit to use for timing.
+        // In this case we divide by 1000 to get milliseconds.
+        mUnit = double(frequency.QuadPart) / 1000.0;
+    }
+
+
+
+    /**
     @brief Start the timer
     **/
     void StartTimer()
@@ -54,22 +74,13 @@ public:
 
         mTiming = true;
 
-        // Query performance frequency
-        LARGE_INTEGER frequency;
-        if (!QueryPerformanceFrequency(&frequency))
-        {
-            printf("Timing failed, unable to query performance frequency");
-            return;
-        }
-
-        // Calculate the frequency to use for the final calculation.
-        // In this case we divide by a thousand to get milliseconds.
-        mFrequency = double(frequency.QuadPart) / 1000.0;
-
         // Query the start frequency
+        LARGE_INTEGER frequency;
         QueryPerformanceCounter(&frequency);
         mStart = frequency.QuadPart;
     }
+
+
 
     /**
     @brief Stop the timer and print the duration since starting the timer
@@ -81,11 +92,12 @@ public:
         QueryPerformanceCounter(&frequency);
 
         // Print the difference
-        printf("%s took %fms\n", inName, double(frequency.QuadPart - mStart) / mFrequency);
+        printf("%s took %fms\n", inName, double(frequency.QuadPart - mStart) / mUnit);
 
         // We have stopped timing
         mTiming = false;
     }
+
 
 
     /**
@@ -100,7 +112,7 @@ private:
     ///@name Properties
     __int64     mStart      = 0;
     bool        mTiming     = false;
-    double      mFrequency  = 0.0;
+    double      mUnit       = 0.0;
 };
 #else // Non-windows
 /**
@@ -182,6 +194,8 @@ public:
                   std::back_inserter(outElements));
         return true;
     }
+
+
 
     /**
     @brief Execute an AOC Exercise
