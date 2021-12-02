@@ -5,6 +5,19 @@
 #include <iterator>
 #include <vector>
 #include <string>
+#include <cassert>
+
+
+
+// gAssert
+#define gAssert(condition, ...)                 \
+    if (!condition)                             \
+    {                                           \
+        printf("\n[ERROR] ");                   \
+        printf(__VA_ARGS__);                    \
+        printf("\n");                           \
+        assert(!"[ASSERT HIT] Check log");      \
+    }
 
 
 
@@ -33,13 +46,12 @@ public:
     /**
     @brief Start the timer
     **/
-    void StartTimer(const char* inName)
+    void StartTimer()
     {
         // Stop any running timer
         if (IsTiming())
             StopTimer();
 
-        mName   = inName;
         mTiming = true;
 
         // Query performance frequency
@@ -62,14 +74,14 @@ public:
     /**
     @brief Stop the timer and print the duration since starting the timer
     **/
-    void StopTimer()
+    void StopTimer(const char* inName = "<None>")
     {
         // Query the end frequency
         LARGE_INTEGER frequency;
         QueryPerformanceCounter(&frequency);
 
         // Print the difference
-        printf("%s took %fms\n", mName, double(frequency.QuadPart - mStart) / mFrequency);
+        printf("%s took %fms\n", inName, double(frequency.QuadPart - mStart) / mFrequency);
 
         // We have stopped timing
         mTiming = false;
@@ -86,7 +98,6 @@ public:
 
 private:
     ///@name Properties
-    const char* mName;
     __int64     mStart      = 0;
     bool        mTiming     = false;
     double      mFrequency  = 0.0;
@@ -98,8 +109,8 @@ private:
 class AOCTimer
 {
 public:
-    void StartTimer(const char*) {}
-    void StopTimer() {}
+    void StartTimer() {}
+    void StopTimer(const char*) {}
     bool IsTiming() const { return false; }
 };
 #endif
@@ -123,8 +134,26 @@ AOCTimer gAOCTimer;
 
 
 
-// gTrace is a printf wrapper that disables printf during timing for proper performance capturing
-#define gTrace(...) if (!gAOCTimer.IsTiming()) printf(__VA_ARGS__)
+/**
+@brief AOCResult
+**/
+struct AOCResult
+{
+    int         mAnswer;    // Answer to an AOC Exercise (will always be an int)
+    const char* mName;      // Name of the Exercise
+};
+#define RESULT(num) AOCResult{num, __func__};
+
+
+
+/**
+@brief AOCUseTiming
+**/
+enum class AOCUseTiming
+{
+    Yes,                    // Use timing (and disable printing the answer)
+    No                      // Do not use timing
+};
 
 
 
@@ -153,4 +182,48 @@ public:
                   std::back_inserter(outElements));
         return true;
     }
-};
+
+    /**
+    @brief Execute an AOC Exercise
+
+    If @a inUseTiming is enabled, an answer file will be expected.
+    If the answer has not yet been generated, please run once without using timing.
+
+    The goal of this behaviour is to use disable timing initially to find the correct answer,
+    and enable timing once the answer has been found and focus shifts towards optimizing the code.
+    **/
+    template<typename F>
+    static void sDoExercise(AOCUseTiming inUseTiming, F inExercise)
+    {
+        if (inUseTiming == AOCUseTiming::Yes)
+        {
+            // Execute the exercise with timing
+            gAOCTimer.StartTimer();
+            AOCResult result = inExercise();
+            gAOCTimer.StopTimer(result.mName);
+
+            // Open answer file
+            std::string filename = std::string(result.mName) + ".answer";
+            std::ifstream stream(filename, std::ifstream::in);
+            gAssert(stream, "\"%s\" must exist", filename.c_str());
+
+            // Deserialize the answer
+            int answer;
+            stream >> answer;
+
+            // Assert that we still have the right answer
+            gAssert(bool(result.mAnswer == answer), "Results of \"%s\" do not match:\n\tCURRENT: %d\n\tCORRECT: %d\n", result.mName, result.mAnswer, answer);
+        }
+        else
+        {
+            // Execute the exercise and print the result
+            AOCResult result = inExercise();
+            printf("%s:\t%d\n", result.mName, result.mAnswer);
+
+            // Serialize answer to an answer file
+            std::string filename = std::string(result.mName) + ".answer";
+            std::ofstream stream(filename, std::ifstream::out);
+            stream << result.mAnswer;
+        }
+    }
+ };

@@ -50,13 +50,13 @@ In this example, there are 7 measurements that are larger than the previous meas
 
 How many measurements are larger than the previous measurement?
 **/
-static void Exercise1(std::vector<int>& inNumbers)
+static AOCResult Exercise1(const std::vector<int>& inNumbers)
 {
     int num_increases = 0;
     for (int i = 1; i < inNumbers.size(); i++)
         num_increases += inNumbers[i] > inNumbers[i - 1];
 
-    gTrace("Num increases: %d\n", num_increases);
+    return RESULT(num_increases);
 }
 
 
@@ -98,17 +98,13 @@ In this example, there are 5 sums that are larger than the previous sum.
 
 Consider sums of a three-measurement sliding window. How many sums are larger than the previous sum?
 **/
-static void Exercise2(std::vector<int>& inNumbers)
+static AOCResult Exercise2(const std::vector<int>& inNumbers)
 {
     int num_increases = 0;
     for (int i = 4; i < inNumbers.size(); i++)
-    {
-        int sum_a = inNumbers[i - 1] + inNumbers[i - 2] + inNumbers[i - 3];
-        int sum_b = inNumbers[i - 0] + inNumbers[i - 1] + inNumbers[i - 2];
-        num_increases += sum_b > sum_a;
-    }
+        num_increases += inNumbers[i] > inNumbers[i - 3];
 
-    gTrace("Num increases: %d\n", num_increases);
+    return RESULT(num_increases);
 }
 
 
@@ -123,12 +119,12 @@ int main()
     if (!AOCUtility::sParseInputFile("./1/input.txt", numbers))
         return 1;
 
+    // Should we do a performance capture?
+    AOCUseTiming use_timing = AOCUseTiming::Yes;
+
     // Execute exercises
-    gAOCTimer.StartTimer("Excercise 1");
-    Exercise1(numbers);
-    gAOCTimer.StartTimer("Excercise 2");
-    Exercise2(numbers);
-    gAOCTimer.StopTimer();
+    AOCUtility::sDoExercise(use_timing, [&]{ return Exercise1(numbers); });
+    AOCUtility::sDoExercise(use_timing, [&]{ return Exercise2(numbers); });
 
     return 0;
 }

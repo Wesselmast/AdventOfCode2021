@@ -1,0 +1,3 @@
+// Ignore executables and .answer files
+*.exe
+*.answer

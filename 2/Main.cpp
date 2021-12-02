@@ -39,7 +39,7 @@ After following these instructions, you would have a horizontal position of 15 a
 Calculate the horizontal position and depth you would have after following the planned course.
 What do you get if you multiply your final horizontal position by your final depth?
 **/
-static void Exercise1(std::vector<std::string>& inData)
+static AOCResult Exercise1(std::vector<std::string>& inData)
 {
     // Declare position variables
     int x_sum = 0;
@@ -63,7 +63,7 @@ static void Exercise1(std::vector<std::string>& inData)
         }
     }
 
-    gTrace("Final multiplied position: %d\n", x_sum * z_sum);
+    return RESULT(x_sum * z_sum);
 }
 
 
@@ -97,7 +97,7 @@ After following these new instructions, you would have a horizontal position of 
 Using this new interpretation of the commands, calculate the horizontal position and depth you would have after following the planned course.
 What do you get if you multiply your final horizontal position by your final depth?
 **/
-static void Exercise2(std::vector<std::string>& inData)
+static AOCResult Exercise2(std::vector<std::string>& inData)
 {
     // Declare position variables
     int x_sum = 0;
@@ -122,7 +122,7 @@ static void Exercise2(std::vector<std::string>& inData)
         }
     }
 
-    gTrace("Final multiplied position: %d\n", x_sum * z_sum);
+    return RESULT(x_sum * z_sum);
 }
 
 
@@ -137,12 +137,12 @@ int main()
     if (!AOCUtility::sParseInputFile("./2/input.txt", data))
         return 1;
 
+    // Should we do a performance capture?
+    AOCUseTiming use_timing = AOCUseTiming::Yes;
+
     // Execute exercises
-    gAOCTimer.StartTimer("Excercise 1");
-    Exercise1(data);
-    gAOCTimer.StartTimer("Excercise 2");
-    Exercise2(data);
-    gAOCTimer.StopTimer();
+    AOCUtility::sDoExercise(use_timing, [&]{ return Exercise1(data); });
+    AOCUtility::sDoExercise(use_timing, [&]{ return Exercise2(data); });
 
     return 0;
 }
